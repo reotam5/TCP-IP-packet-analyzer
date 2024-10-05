@@ -74,6 +74,17 @@ def parse_intereface_name(interface):
             )
         )
 
+filter_table = {
+    "arp": "arp",
+    "ipv4": "ip",
+    "tcp": "ip and tcp",
+    "udp": "ip and udp",
+    "http": "ip and tcp and port 80",
+    "https": "ip and tcp and port 443",
+}
+def parse_preset_filter(filter):
+    return filter_table[filter] if filter in filter_table else "ip"
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -81,15 +92,24 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-i",
+        metavar="Network interface name",
         required=True,
-        help="Network interface name to capture packet on.",
+        help="The name of network interface to capture packet on.",
         type=parse_intereface_name,
     )
     parser.add_argument(
-        "-f",
+        "-p",
+        metavar="Preset filter",
         required=False,
-        help="BPF filter that will be appied when capturing packet.",
+        choices=[*filter_table],
+        help="Predefined BPF filter. Available opptions are {options}".format(options = ", ".join("'"+x+"'" for x in [*filter_table]))
+    )
+    parser.add_argument(
+        "-f",
+        metavar="BPF filter",
+        required=False,
+        help="BPF filter that will be appied when capturing packet. If provided, overwrites -p",
     )
     args = parser.parse_args()
 
-    capture(args.i, args.f, 1)
+    capture(args.i, args.f or parse_preset_filter(args.p), 1)

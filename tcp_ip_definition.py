@@ -29,7 +29,7 @@ ipv4 = Definition(
         Field("Flag: M (More Fragments)", 1/8,lambda *args: "More Fragments" if get_binary(*args) == "1" else "--"),
         Field("Offset", (5 / 8) + 1),
         Field("TTL", 1),
-        Field("Protocol", 1, display_ipv4_protocol),
+        Field("Protocol", 1, display_ip_protocol),
         Field("Checksum", 2),
         Field("Source Address", 4, display_ip),
         Field("Destination Address", 4, display_ip),

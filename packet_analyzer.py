@@ -1,6 +1,7 @@
 import sys
 from scapy.all import argparse, sniff
 from prettytable import PrettyTable
+from scapy.interfaces import get_if_list
 from tcp_ip_definition import definition
 
 
@@ -62,20 +63,33 @@ def capture(interface, filter, count):
         print(e)
         sys.exit("Failed to capture packets")
 
+
+def parse_intereface_name(interface):
+    if interface in get_if_list():
+        return interface
+    else:
+        raise argparse.ArgumentTypeError(
+            "{interface} is not a valid network interface name on your machine.".format(
+                interface=interface
+            )
+        )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="This program captures packets and display details of the packets. It supports APR, IPv4, TCP, and UDP headers."
+        description="This program captures a packet and display header details. It currently supports ARP, IPv4, TCP, and UDP packets."
     )
     parser.add_argument(
-        "--interface",
+        "-i",
         required=True,
-        help="The network interface name to capture packet on.",
+        help="Network interface name to capture packet on.",
+        type=parse_intereface_name,
     )
     parser.add_argument(
-        "--filter",
+        "-f",
         required=False,
-        help="BPF to filter packets based on your interests.",
+        help="BPF filter that will be appied when capturing packet.",
     )
     args = parser.parse_args()
 
-    capture(args.interface, args.filter, 1)
+    capture(args.i, args.f, 1)

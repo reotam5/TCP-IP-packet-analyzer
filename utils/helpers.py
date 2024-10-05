@@ -15,14 +15,10 @@ def display_mac_address(*args):
     return ":".join(hex[i : i + 2] for i in range(0, len(hex), 2))
 
 
-def display_double_words(*args):
-    decimal = get_decimal(*args)
-    return "{value} double-words".format(value=decimal)
-
-
 def display_ip(*args):
     hex = get_hex(*args)
     return ".".join(str(int(hex[i : i + 2], 16)) for i in range(0, len(hex), 2))
+
 
 def display_ether_type(*args):
     hex = get_hex(*args)
@@ -33,7 +29,8 @@ def display_ether_type(*args):
     }
     return table[hex] if hex in table else "--"
 
-def display_ipv4_protocol(*args):
+
+def display_ip_protocol(*args):
     decimal = get_decimal(*args)
     table = {
         "1": "ICMP",
@@ -100,4 +97,3 @@ def display_udp_port(*args):
         "5353": "mDNS",
     }
     return table[decimal] if decimal in table else "--"
-

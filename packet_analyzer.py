@@ -92,24 +92,27 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-i",
-        metavar="Network interface name",
+        "--interface",
+        metavar="network_interface",
         required=True,
         help="The name of network interface to capture packet on.",
         type=parse_intereface_name,
     )
     parser.add_argument(
         "-p",
-        metavar="Preset filter",
+        "--preset-filter",
+        metavar="preset_filter",
         required=False,
         choices=[*filter_table],
         help="Predefined BPF filter. Available opptions are {options}".format(options = ", ".join("'"+x+"'" for x in [*filter_table]))
     )
     parser.add_argument(
         "-f",
-        metavar="BPF filter",
+        "--filter",
+        metavar="bpf_filter",
         required=False,
         help="BPF filter that will be appied when capturing packet. If provided, overwrites -p",
     )
     args = parser.parse_args()
 
-    capture(args.i, args.f or parse_preset_filter(args.p), 1)
+    capture(args.interface, args.filter or parse_preset_filter(args.preset_filter), 1)
